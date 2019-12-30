@@ -3,8 +3,15 @@ package server
 import (
 	"errors"
 	"fmt"
-	"io"
+	"math/rand"
 	"net"
+	"time"
+
+	rlp "github.com/markamdev/remlog/protocol"
+)
+
+const (
+	readBufferLen = 1500 // 1500 it's a typical MTU in TCP/IP networks so packet should not reach this value
 )
 
 // RLSconfig structure containing RemLog server configuration
@@ -15,7 +22,7 @@ type RLSconfig struct {
 type rlscontext struct {
 	valid    bool
 	listener *net.UDPConn
-	clients  map[string]io.Writer
+	clients  map[string]uint32
 	active   bool
 }
 
@@ -27,6 +34,7 @@ func Init(conf *RLSconfig) error {
 
 	// prepare server context
 	var ctx rlscontext
+	ctx.clients = make(map[string]uint32)
 
 	// open UDP listening port
 	addr := net.UDPAddr{Port: conf.Port}
@@ -38,6 +46,9 @@ func Init(conf *RLSconfig) error {
 	ctx.listener = connection
 
 	// open logging file
+
+	// prepare random generator for id generation
+	rand.Seed(time.Now().UnixNano())
 
 	// no errorr till now
 	ctx.valid = true
@@ -54,6 +65,8 @@ func Start(wait bool) error {
 		return errors.New("Server not initialized - Init() not called or failed")
 	}
 
+	serverContext.active = true
+
 	if wait {
 		startListener()
 	} else {
@@ -64,5 +77,40 @@ func Start(wait bool) error {
 }
 
 func startListener() {
+	//
+	buffer := make([]byte, readBufferLen)
+
+	for serverContext.active {
+		n, addr, err := serverContext.listener.ReadFrom(buffer)
+		if err != nil {
+			// TODO: Handle error
+			continue
+		}
+		if n == 0 {
+			// zero-length packet means something is wrong
+			// TODO: Handle error
+			continue
+		}
+		// temporary debug message
+		fmt.Println("Packet received from:", addr.String())
+
+		msg, err := rlp.DataToMessage(buffer[:n])
+		if err != nil {
+			fmt.Println("Failed to read log message from packet:", err.Error())
+			continue
+		}
+		switch msg.Type {
+		case rlp.Register:
+			fmt.Println("Registration request received")
+			registerClient(addr, msg)
+		case rlp.Unregister:
+			fmt.Println("Deregistration request recevied")
+		case rlp.WriteLog:
+			fmt.Println("Packet with log message received")
+		default:
+			fmt.Println("Unsupported message type - skipping")
+		}
+
+	}
 
 }

@@ -1,7 +1,7 @@
 GO=go
 BUILD_DIR=./build
 
-all: clean server tester
+all: server tester
 
 outdir:
 	mkdir -p $(BUILD_DIR)
