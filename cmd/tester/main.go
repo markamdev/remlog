@@ -21,9 +21,9 @@ func main() {
 	fmt.Println("Client successfully registered")
 
 	// try to send messages with different logging levels
-	remlog.SendLog(remlog.Verbose, "This is a Verbose message")
-	remlog.SendLog(remlog.Debug, "This is a Debug message")
-	remlog.SendLog(remlog.Info, "This is a Info message")
-	remlog.SendLog(remlog.Error, "This is a Error message")
-	remlog.SendLog(remlog.Fatal, "This is a Fatal message")
+	remlog.LogVerbose("This is a Verbose message")
+	remlog.LogDebug("This is a Debug message")
+	remlog.LogInfo("This is a Info message")
+	remlog.LogError("This is a Error message")
+	remlog.LogFatal("This is a Fatal message")
 }

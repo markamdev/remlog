@@ -29,6 +29,7 @@ func registerClient(client net.Addr, request rlp.Message) {
 			// client not registered yet
 			newID := rand.Uint32()
 			serverContext.clients[clientAddress] = newID
+			serverContext.clientsRev[newID] = clientAddress
 			response.Identifier = newID
 		} else {
 			// client already registered
@@ -48,4 +49,15 @@ func registerClient(client net.Addr, request rlp.Message) {
 	}
 
 	fmt.Println("Client registration request processed succesfully")
+}
+
+func saveLogContent(client net.Addr, msg rlp.Message) {
+	clientID, ok := serverContext.clientsRev[msg.Identifier]
+	if !ok {
+		// (maybe it will be good to inform sender that identifier is unknown?)
+		return
+	}
+	logString := fmt.Sprintf("(%v) %s", clientID, string(msg.Content))
+	// temporary solution - in final version there will be another log output
+	fmt.Println(logString)
 }

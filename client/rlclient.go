@@ -22,22 +22,6 @@ type rlccontext struct {
 
 var clientContext rlccontext
 
-// Severity is an enum type for setting log message severity level
-type Severity int
-
-const (
-	// Verbose is a most intense logging level
-	Verbose Severity = iota
-	// Debug is a debugging message, should not be used/visible in production environment
-	Debug
-	// Info is and informative message, used for application tracking in production environment
-	Info
-	// Error is a message about recoverable application error
-	Error
-	// Fatal is a message about critical application error, probably the last before application closure
-	Fatal
-)
-
 // Init function initializes RemLog client
 func Init(cnf *RLCconfig) error {
 	if cnf == nil {
@@ -109,7 +93,49 @@ func Register() error {
 	return nil
 }
 
-// SendLog sends log with given severity to configured server, return error if any occured
-func SendLog(lvl Severity, message string) error {
-	return errors.New("Client.SendLog() Not implemented")
+// Log sends log with given severity to configured server, return error if any occured
+func Log(lvl Severity, message string) error {
+	fullText := lvl.String() + " " + message
+
+	msg := rlp.Message{}
+	msg.Type = rlp.WriteLog
+	msg.Identifier = clientContext.identifier
+	msg.Content = []byte(fullText)
+
+	data, err := rlp.MessageToData(&msg)
+	if err != nil {
+		return errors.New("Failed to create log message data")
+	}
+
+	n, err := clientContext.link.Write(data)
+	if n != len(data) || err != nil {
+		return errors.New("Failed to send log message")
+	}
+
+	return nil
+}
+
+// LogVerbose sends provided text as a Verbose log
+func LogVerbose(message string) error {
+	return Log(LvlVerbose, message)
+}
+
+// LogDebug sends provided text as a Debug log
+func LogDebug(message string) error {
+	return Log(LvlDebug, message)
+}
+
+// LogInfo sends provided text as a Info log
+func LogInfo(message string) error {
+	return Log(LvlInfo, message)
+}
+
+// LogError sends provided text as a Error log
+func LogError(message string) error {
+	return Log(LvlError, message)
+}
+
+// LogFatal sends provided text as a Fatal log
+func LogFatal(message string) error {
+	return Log(LvlFatal, message)
 }

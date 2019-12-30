@@ -23,6 +23,7 @@ type rlscontext struct {
 	valid    bool
 	listener *net.UDPConn
 	clients  map[string]uint32
+	clientsRev map[uint32]string
 	active   bool
 }
 
@@ -35,6 +36,7 @@ func Init(conf *RLSconfig) error {
 	// prepare server context
 	var ctx rlscontext
 	ctx.clients = make(map[string]uint32)
+	ctx.clientsRev = make(map[uint32]string)
 
 	// open UDP listening port
 	addr := net.UDPAddr{Port: conf.Port}
@@ -104,9 +106,11 @@ func startListener() {
 			fmt.Println("Registration request received")
 			registerClient(addr, msg)
 		case rlp.Unregister:
-			fmt.Println("Deregistration request recevied")
+			fmt.Println("Unregistration request received")
+			// TODO implement unregistration
 		case rlp.WriteLog:
 			fmt.Println("Packet with log message received")
+			saveLogContent(addr, msg)
 		default:
 			fmt.Println("Unsupported message type - skipping")
 		}
