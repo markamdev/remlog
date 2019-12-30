@@ -4,13 +4,17 @@ BUILD_DIR=./build
 all: server tester
 
 outdir:
-	mkdir -p $(BUILD_DIR)
+	@echo "-- OUTDIR --"
+	@mkdir -p $(BUILD_DIR)
 
 clean:
-	rm -rf $(BUILD_DIR)
+	@echo "-- CLEAN --"
+	@rm -rf $(BUILD_DIR)
 
 server: outdir
-	$(GO) build -o $(BUILD_DIR)/rlserver ./cmd/server
+	@echo "-- SERVER --"
+	@$(GO) build -o $(BUILD_DIR)/rlserver ./cmd/server
 
 tester: outdir
-	$(GO) build -o $(BUILD_DIR)/rltester ./cmd/tester
+	@echo "-- TESTER --"
+	@$(GO) build -o $(BUILD_DIR)/rltester ./cmd/tester
