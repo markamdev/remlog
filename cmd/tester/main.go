@@ -1,13 +1,26 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	remlog "github.com/markamdev/remlog/client"
 )
 
+const (
+	defServerAddress = "localhost:9999"
+	defClientName    = "TesterApp"
+)
+
 func main() {
-	cnf := remlog.RLCconfig{Server: "localhost:9999"}
+	var serverAddress, clientName string
+
+	// Read command line params (or use default ones)
+	flag.StringVar(&serverAddress, "s", defServerAddress, "RemLog server in format 'address:port'")
+	flag.StringVar(&clientName, "n", defClientName, "Client name/identifier sent in registration request")
+	flag.Parse()
+
+	cnf := remlog.RLCconfig{Server: serverAddress, Name: clientName}
 	if err := remlog.Init(&cnf); err != nil {
 		fmt.Println("Failed to initialize client: ", err.Error())
 		return
