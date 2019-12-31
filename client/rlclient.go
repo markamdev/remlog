@@ -9,15 +9,19 @@ import (
 	rlp "github.com/markamdev/remlog/protocol"
 )
 
-// RLCconfig structure stores RemLog client configuration (ex. server address and port)
+// RLCconfig structure stores RemLog client configuration
 type RLCconfig struct {
+	// Server is a string containing server address and port (ex. localhost:9999)
 	Server string
+	// Name is a client's name (or other identifier) sent to server in registration request
+	Name string
 }
 
 type rlccontext struct {
 	valid      bool
 	link       *net.UDPConn
 	identifier uint32
+	name       string
 }
 
 var clientContext rlccontext
@@ -42,6 +46,11 @@ func Init(cnf *RLCconfig) error {
 	// set proper client context field
 	clientContext.valid = true
 	clientContext.link = conn
+	if len(cnf.Name) > 0 {
+		clientContext.name = cnf.Name
+	} else {
+		clientContext.name = "UNKNOWN"
+	}
 
 	return nil
 }
@@ -57,7 +66,7 @@ func Register() error {
 	msg.Identifier = rlp.IdentifierGlobal
 	msg.Type = rlp.Register
 	// TODO remove string copying below as message content for registration not needed
-	msg.Content = []byte("Welcome message")
+	msg.Content = []byte(clientContext.name)
 
 	data, err := rlp.MessageToData(&msg)
 	if err != nil {

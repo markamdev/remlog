@@ -21,15 +21,14 @@ func registerClient(client net.Addr, request rlp.Message) {
 		// if debug identifier used then respond with same one
 		response.Identifier = request.Identifier
 	} else {
-		// TODO in future client will be identified by message content (not by IP:PORT string)
-		clientAddress := client.String()
+		clientName := string(request.Content)
 
-		id, ok := serverContext.clients[clientAddress]
+		id, ok := serverContext.clients[clientName]
 		if !ok {
 			// client not registered yet
-			newID := rand.Uint32()
-			serverContext.clients[clientAddress] = newID
-			serverContext.clientsRev[newID] = clientAddress
+			newID := rand.Uint32() // TODO consider using some hash instead of random uint
+			serverContext.clients[clientName] = newID
+			serverContext.clientsRev[newID] = clientName
 			response.Identifier = newID
 		} else {
 			// client already registered
@@ -52,12 +51,18 @@ func registerClient(client net.Addr, request rlp.Message) {
 }
 
 func saveLogContent(client net.Addr, msg rlp.Message) {
-	clientID, ok := serverContext.clientsRev[msg.Identifier]
-	if !ok {
-		// (maybe it will be good to inform sender that identifier is unknown?)
-		return
+	var clientName string
+	if msg.Identifier == rlp.IdentifierDebug {
+		clientName = "DEBUG"
+	} else {
+		name, ok := serverContext.clientsRev[msg.Identifier]
+		if !ok {
+			// (maybe it will be good to inform sender that identifier is unknown?)
+			return
+		}
+		clientName = name
 	}
-	logString := fmt.Sprintf("(%v) %s", clientID, string(msg.Content))
+	logString := fmt.Sprintf("(%s) %s", clientName, string(msg.Content))
 	// temporary solution - in final version there will be another log output
 	fmt.Println(logString)
 }
