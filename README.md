@@ -16,8 +16,35 @@ Provided Go sources contains client side package, server side package (for custo
 
 ## Installation and usage
 
-### Client side and server side packages
+There's no sophisticated installation procedure needed to use RemLog packages. If provided standalone applications will not be used there's no need to implicitly download repository and build sources.
 
-### Sample log collection server
+When one wants to use provided server or tester application (simple dummy client) then it enough just to download repository:
+
+```bash
+git clone github.com/markamdev/remlog
+```
+
+and build applications:
+
+```bash
+cd remlog
+make
+cd build
+```
+
+### Client side and server side packages usage
+
+### Sample log collection server (rlserver) usage
+
+### Sample log sending client (rltester) usage
+
+If **rltester** is build (see [higher section](#installation-and-usage)) it can be used to check working server instance.
+
+When launched without any params **rltester** assumes server is running at *localhost:9999* and client's name is set to *TesterApp*.
+
+To change default values command line params can be used:
+
+* *-s servername:port* changes default RemLog server location
+* *-n somename* changes default client's name sent in registration request
 
 ## License
