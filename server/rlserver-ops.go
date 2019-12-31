@@ -62,7 +62,5 @@ func saveLogContent(client net.Addr, msg rlp.Message) {
 		}
 		clientName = name
 	}
-	logString := fmt.Sprintf("(%s) %s", clientName, string(msg.Content))
-	// temporary solution - in final version there will be another log output
-	fmt.Println(logString)
+	fmt.Fprintf(serverContext.logOutput, "(%s) %s\n", clientName, string(msg.Content))
 }

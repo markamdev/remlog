@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
+	"os"
 	"time"
 
 	rlp "github.com/markamdev/remlog/protocol"
@@ -12,6 +13,7 @@ import (
 
 const (
 	readBufferLen = 1500 // 1500 it's a typical MTU in TCP/IP networks so packet should not reach this value
+	defOutputFile = "default.log"
 )
 
 // RLSconfig structure containing RemLog server configuration
@@ -20,11 +22,12 @@ type RLSconfig struct {
 }
 
 type rlscontext struct {
-	valid    bool
-	listener *net.UDPConn
-	clients  map[string]uint32
+	valid      bool
+	listener   *net.UDPConn
+	clients    map[string]uint32
 	clientsRev map[uint32]string
-	active   bool
+	active     bool
+	logOutput  *os.File
 }
 
 var serverContext rlscontext
@@ -47,8 +50,6 @@ func Init(conf *RLSconfig) error {
 	}
 	ctx.listener = connection
 
-	// open logging file
-
 	// prepare random generator for id generation
 	rand.Seed(time.Now().UnixNano())
 
@@ -66,6 +67,18 @@ func Start(wait bool) error {
 	if !serverContext.valid {
 		return errors.New("Server not initialized - Init() not called or failed")
 	}
+
+	if serverContext.active {
+		// server already launched - no need to relaunch
+		return nil
+	}
+
+	// prepare output file for collecting logs
+	outFile, err := os.OpenFile(defOutputFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		return errors.New("Failed to open output file for logs collection")
+	}
+	serverContext.logOutput = outFile
 
 	serverContext.active = true
 
