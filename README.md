@@ -34,7 +34,11 @@ cd build
 
 ### Client side and server side packages usage
 
+TBD
+
 ### Sample log collection server (rlserver) usage
+
+TBD
 
 ### Sample log sending client (rltester) usage
 
@@ -48,3 +52,10 @@ To change default values command line params can be used:
 * *-n somename* changes default client's name sent in registration request
 
 ## License
+
+TBD (MIT or Apache 2-clause)
+
+## Contact
+
+If you need to contact me feel free to write me an email:  
+[markamdev.84#dontwantSPAM#gmail.com]()
