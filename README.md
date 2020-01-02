@@ -61,12 +61,15 @@ As usual *-h* option will print help message.
 
 If **rltester** is build (see beginning of [Install and usage section](#installation-and-usage)) it can be used to check working server instance.
 
-When launched without any params **rltester** assumes server is running at *localhost:9999* and client's name is set to *TesterApp*.
+When launched without any params **rltester** assumes server is running at *localhost:9999* and client's name is set to *TesterApp*. By default one set of log messages is sent to server (with 200ms interval)
 
 To change default values command line params can be used:
 
 * *-s servername:port* changes default RemLog server location
 * *-n somename* changes default client's name sent in registration request
+* *-l N* sets number of log packets sent to server (each packet contains one log message of each severity level)
+
+As usual *-h* option will print help message.
 
 ## License
 
