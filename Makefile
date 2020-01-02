@@ -31,12 +31,12 @@ amd64: SUFFIX=-x64
 amd64: .crossinfo
 amd64: all
 
-pizero: ARCHSET=GOARCH=arm GOARM=6
+pizero: ARCHSET=GOARCH=arm GOARM=6 GOOS=linux
 pizero: SUFFIX=-armv6
 pizero: .crossinfo
 pizero: all
 
-pi3: ARCHSET=GOARCH=arm GOARM=7
+pi3: ARCHSET=GOARCH=arm GOARM=7 GOOS=linux
 pi3: SUFFIX=-armv7
 pi3: .crossinfo
 pi3: all
