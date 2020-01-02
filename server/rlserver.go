@@ -13,12 +13,12 @@ import (
 
 const (
 	readBufferLen = 1500 // 1500 it's a typical MTU in TCP/IP networks so packet should not reach this value
-	defOutputFile = "default.log"
 )
 
 // RLSconfig structure containing RemLog server configuration
 type RLSconfig struct {
-	Port int
+	Port    uint
+	OutFile string
 }
 
 type rlscontext struct {
@@ -42,13 +42,20 @@ func Init(conf *RLSconfig) error {
 	ctx.clientsRev = make(map[uint32]string)
 
 	// open UDP listening port
-	addr := net.UDPAddr{Port: conf.Port}
+	addr := net.UDPAddr{Port: int(conf.Port)}
 	connection, err := net.ListenUDP("udp4", &addr)
 	if err != nil {
 		fmt.Println("Failed to open listening socket")
 		return err
 	}
 	ctx.listener = connection
+
+	// open output file for collecting logs
+	outFile, err := os.OpenFile(conf.OutFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		return errors.New("Failed to open output file for logs collection")
+	}
+	ctx.logOutput = outFile
 
 	// prepare random generator for id generation
 	rand.Seed(time.Now().UnixNano())
@@ -72,13 +79,6 @@ func Start(wait bool) error {
 		// server already launched - no need to relaunch
 		return nil
 	}
-
-	// prepare output file for collecting logs
-	outFile, err := os.OpenFile(defOutputFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
-	if err != nil {
-		return errors.New("Failed to open output file for logs collection")
-	}
-	serverContext.logOutput = outFile
 
 	serverContext.active = true
 

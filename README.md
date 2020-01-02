@@ -29,8 +29,18 @@ and build applications:
 ```bash
 cd remlog
 make
-cd build
 ```
+
+Compiled binaries will be placed in *./build* directory.
+
+Since v0.2.0 release there are additional Makefile targets allowing simple cross compilation for selected platforms:
+
+* *amd64* for x64 architecture (no OS forced so host used)
+* *intel32* for x86 architecture (no OS forced so host used)
+* *pizero* for ARMv6 architecture (Linux set for OS), compatible with Raspberri Pi Zero board
+* *pi3* for ARMv7 architecture (Linux set for OS), compatible with Raspberry Pi 3 board (and probably other boards)
+
+These targets are prepared for simpler testing on multiple devices/boards.
 
 ### Client side and server side packages usage
 
@@ -38,11 +48,18 @@ TBD
 
 ### Sample log collection server (rlserver) usage
 
-TBD
+**rlserver** application provided by this project is a ready-to-use simple log collecting server compatible with [rltester](#sample-log-sending-client-(rltester)-usage) and client side package. Building instructions are availble at the beginning of [Install and usage section](#installation-and-usage).
+
+**rlserver** is listening on default (*9999*) or user defined UDP port and saves all received log messages in specified output file (*default.log* by default). Default values can be modified using following command line params:
+
+* *-d port* to set UDP listening port
+* *-o path* to set output file for received logs
+
+As usual *-h* option will print help message.
 
 ### Sample log sending client (rltester) usage
 
-If **rltester** is build (see [higher section](#installation-and-usage)) it can be used to check working server instance.
+If **rltester** is build (see beginning of [Install and usage section](#installation-and-usage)) it can be used to check working server instance.
 
 When launched without any params **rltester** assumes server is running at *localhost:9999* and client's name is set to *TesterApp*.
 
@@ -58,4 +75,4 @@ TBD (MIT or Apache 2-clause)
 ## Contact
 
 If you need to contact me feel free to write me an email:  
-[markamdev.84#dontwantSPAM#gmail.com]()
+[markamdev.84#dontwantSPAM#gmail.com](maitlo:)
