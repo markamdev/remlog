@@ -73,9 +73,9 @@ As usual *-h* option will print help message.
 
 ## License
 
-TBD (MIT or Apache 2-clause)
+Code is published under [MIT License](https://opensource.org/licenses/MIT) as it seems to be the most permissive license. If for some reason you need to have this code published with other license (ex. to reuse the code in your project) please contact [author](#author-/-contact) directly.
 
-## Contact
+## Author / Contact
 
 If you need to contact me feel free to write me an email:  
 [markamdev.84#dontwantSPAM#gmail.com](maitlo:)
