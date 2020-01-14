@@ -9,6 +9,10 @@ import (
 	rlp "github.com/markamdev/remlog/protocol"
 )
 
+const (
+	defTimestampFormat = "2006.01.02_15:04:05.0000"
+)
+
 // RLCconfig structure stores RemLog client configuration
 type RLCconfig struct {
 	// Server is a string containing server address and port (ex. localhost:9999)
@@ -104,7 +108,8 @@ func Register() error {
 
 // Log sends log with given severity to configured server, return error if any occured
 func Log(lvl Severity, message string) error {
-	fullText := lvl.String() + " " + message
+	timestamp := time.Now().Format(defTimestampFormat)
+	fullText := fmt.Sprintf("%s %s %s", timestamp, lvl.String(), message)
 
 	msg := rlp.Message{}
 	msg.Type = rlp.WriteLog

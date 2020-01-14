@@ -19,16 +19,16 @@ const (
 func (s Severity) String() string {
 	switch s {
 	case LvlVerbose:
-		return "[VERBOSE]"
+		return "VERBOSE"
 	case LvlDebug:
-		return "[DEBUG]"
+		return "DEBUG"
 	case LvlInfo:
-		return "[INFO]"
+		return "INFO"
 	case LvlError:
-		return "[ERROR]"
+		return "ERROR"
 	case LvlFatal:
-		return "[FATAL]"
+		return "FATAL"
 	default:
-		return "[---]"
+		return "----"
 	}
 }
