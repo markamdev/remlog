@@ -44,7 +44,38 @@ These targets are prepared for simpler testing on multiple devices/boards.
 
 ### Client side and server side packages usage
 
-TBD
+This project is splitted into two parts that can be used in third party applications: client and server. With use of these parts one can easily send logs from application or implement it's own log collecting server.
+
+#### Client side package
+
+To be able to send log messages to server application has to import client package:
+
+```go
+import (
+    "github.com/markamdev/remlog/client"
+)
+```
+
+Before any message sending is possible *remlog* client has to be initialized and registered on server:
+
+```go
+cnf := client.RLCconfig{Server: "10.0.0.1:9999", Name: "clientName"}
+if err := client.Init(&cnf); err != nil {
+    fmt.Println("Failed to initialize client: ", err.Error())
+    return
+}
+
+if err := client.Register(); err != nil {
+    fmt.Println("Failed to register client: ", err.Error())
+    return
+}
+```
+
+In code above *client.RLConfig* is a structure that contains client's configuration: address (with port) of log collection server and name (some string identifier) of this client instance.
+
+It is highly recommended to not use application binary name as a client's name. It can make difficult to analyze logs if more than one node will be running same application sending log to same server. Any string containing hostname and/or ip address would be more useful.
+
+#### Server side package
 
 ### Sample log collection server (rlserver) usage
 
