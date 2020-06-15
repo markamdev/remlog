@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	fmt.Println("RemLog server implementation")
+	fmt.Println("RemLog sample client application")
 	err := remlog.InitClient(remlog.ClientConfig{})
 	if err != nil {
 		panic(err)
