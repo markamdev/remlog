@@ -1,4 +1,4 @@
-package remlog
+package server
 
 // Severity ...
 type Severity int
@@ -18,14 +18,6 @@ const (
 	Fatal
 )
 
-// ClientConfig ...
-type ClientConfig struct {
-	AuthServer string
-	LogServer  string
-	LogLevel   Severity
-	DebugMode  bool
-}
-
 // LogOutput ...
 type LogOutput int
 
@@ -38,8 +30,8 @@ const (
 	OutputDatabase
 )
 
-// ServerConfig ...
-type ServerConfig struct {
+// Config ...
+type Config struct {
 	AuthPort   int
 	LogPort    int
 	DebugMode  bool

@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 
-	remlog "github.com/markamdev/remlog/pkg"
+	"github.com/markamdev/remlog/common"
+	"github.com/markamdev/remlog/pkg/client"
 )
 
 func main() {
-	fmt.Println("RemLog sample client application")
-	err := remlog.InitClient(remlog.ClientConfig{})
+	fmt.Println("RemLog sample client application. Version:", common.Version)
+	err := client.InitClient(client.Config{})
 	if err != nil {
 		panic(err)
 	}
