@@ -18,6 +18,10 @@ server: $(BUILD_DIR)
 client: $(BUILD_DIR)
 	$(ARCHSET) $(GO) build -o $(BUILD_DIR)/rlclient$(SUFFIX) ./cmd/client
 
+tests:
+	$(GO) test -v ./pkg/client
+	$(GO) test -v ./pkg/server
+
 # Targets for cross compilation
 intel32: ARCHSET=GOARCH=386
 intel32: SUFFIX=-x86

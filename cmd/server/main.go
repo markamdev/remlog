@@ -1,16 +1,27 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/markamdev/remlog/common"
 	remlog "github.com/markamdev/remlog/pkg/server"
 )
 
 func main() {
-	fmt.Println("RemLog server implementation. Version:", common.Version)
-	err := remlog.InitServer(remlog.Config{})
+	log.Println("RemLog reference server")
+	log.Println("Package version:", common.Version)
+
+	cfg := remlog.Config{}
+	cfg.AuthPort = common.DefaultAuthPort
+	cfg.LogPort = common.DefaultLogPort
+	// TODO set some dedicated output function
+	// cfg.Ouput = ...
+	cfg.DebugMode = true
+
+	err := remlog.InitServer(cfg)
 	if err != nil {
-		panic(err)
+		log.Fatal("RemLog refrence server failure: ", err.Error())
 	}
+
+	log.Println("RemLog reference server stopped")
 }
